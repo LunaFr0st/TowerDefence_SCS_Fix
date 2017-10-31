@@ -2,15 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelGUIManager : MonoBehaviour {
+namespace TowerDefense
+{
+    public class LevelGUIManager : MonoBehaviour
+    {
+        //Variables
+        public GUIStyle background = new GUIStyle();
+        int sW; // Screen Width
+        int sH; // Screen Height
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        //Functions
+        void Awake()
+        {
+
+        }
+        void Update()
+        {
+            sW = Screen.width / 16;
+            sH = Screen.height / 9;
+        }
+        void OnGUI()
+        {
+            GUI.Box(new Rect(sW,sH,sW,sH),"");
+        }
+    }
 }
+
