@@ -8,6 +8,7 @@ namespace TowerDefense
         public float damage = 50f;
         public float speed = 50f;
         public Vector3 direction;
+        float timeOfDeath = 3f;
 
         // Use this for initialization
         void Start()
@@ -21,6 +22,7 @@ namespace TowerDefense
             Vector3 velocity = direction.normalized * speed;
             transform.position += velocity * Time.deltaTime;
             transform.rotation = Quaternion.LookRotation(velocity);
+            Destroy(gameObject, timeOfDeath);
         }
         void OnTriggerEnter(Collider col)
         {

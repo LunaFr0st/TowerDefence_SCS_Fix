@@ -12,7 +12,7 @@ namespace TowerDefense
             public float current = 17;
             public float begin = 10;
             public float end = 17;
-            public float smoothness = 1f;
+            public float smoothness = 2f;
             public LerpManifold() { }
             public LerpManifold(float current, float begin, float end, float smoothness)
             {
@@ -46,6 +46,8 @@ namespace TowerDefense
         Rect logoRect;
         Rect healthRect;
         Rect moneyRect;
+        Vector2 scrollbar = Vector2.zero;
+
 
         //Functions
         void Awake()
@@ -70,6 +72,7 @@ namespace TowerDefense
             logoRect = new Rect(contentX * sW * 1.125f, sH, 4 * sW, sH);
             healthRect = new Rect(contentX * sW * 1.125f, 2*sH, 4 * sW, sH);
             moneyRect = new Rect(contentX * sW * 1.39f, 2 * sH, 4 * sW, sH);
+            Rect towerRect = new Rect(contentX * sW * 1.39f, 2 * sH, 4 * sW, sH);
             Rect healthContRect = new Rect(contentX * sW * 1.125f, 2.5f * sH, 4 * sW, sH);
             Rect moneyContRect = new Rect(contentX * sW * 1.39f, 2.5f * sH, 4 * sW, sH);
             GUI.Box(logoRect, "", Logo);
@@ -81,6 +84,7 @@ namespace TowerDefense
 
             // Button
             float buttonX = buttonManifold.GetValue(showButton);
+            
             Rect buttonRect = new Rect(buttonX * sW, 4 * sH, sW, sH);
 
             if (showButton)
@@ -105,6 +109,11 @@ namespace TowerDefense
             {
                 showButton = true;
             }
+
+            // Tower Scrollbar on Content Panel
+            scrollbar = GUI.BeginScrollView(towerRect, scrollbar, new Rect(sW,sH,sW,sH));
+            
+            GUI.EndScrollView();
         }
 
     }
