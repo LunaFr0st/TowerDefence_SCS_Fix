@@ -5,6 +5,7 @@ namespace TowerDefense
 {
     public class EnemySpawner : MonoBehaviour
     {
+        LevelGUIManager levelGUI;
         public int enemyLeftToSpawn;
         public int enemyID;
         private int waveNum = 0;
@@ -18,9 +19,14 @@ namespace TowerDefense
         }
         void Start()
         {
-            InvokeRepeating("IMASCRUB",3,1);
+            //if (levelGUI.waveStarted)
+            //{
+                
+            //}
+            InvokeRepeating("Spawner", 0, 1);
+
         }
-        void IMASCRUB()
+        void Spawner()
         {
             if(enemyLeftToSpawn > 0)
             {
@@ -29,23 +35,23 @@ namespace TowerDefense
             }
             
         }
-        void FixedUpdate()
-        {
-            //StartCoroutine(WaitForSpawn());
-        }
-        void Spawn()
-        {
-            GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation.transform);
-            AIAgent cloneComp = clone.GetComponent<AIAgent>();
-            enemyLeftToSpawn--;
-        }
-        IEnumerator WaitForSpawn()
-        {
-            enemyLeftToSpawn--;
-            yield return new WaitForSeconds(5);
-            GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation.transform);
+        //void FixedUpdate()
+        //{
+        //    //StartCoroutine(WaitForSpawn());
+        //}
+        //void Spawn()
+        //{
+        //    GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation.transform);
+        //    AIAgent cloneComp = clone.GetComponent<AIAgent>();
+        //    enemyLeftToSpawn--;
+        //}
+        //IEnumerator WaitForSpawn()
+        //{
+        //    enemyLeftToSpawn--;
+        //    yield return new WaitForSeconds(5);
+        //    GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation.transform);
 
-        }
+        //}
     }
 }
 
