@@ -38,10 +38,15 @@ namespace TowerDefense
         public LerpManifold panelManifold = new LerpManifold();
         public LerpManifold contentManifold = new LerpManifold();
         public LerpManifold buttonManifold = new LerpManifold(15.5f, 15.5f, 9.5f, 1);
+
+        public bool waveStarted = false;
+        public float timeSpeed = 2f;
+
         int sW; // Screen Width
         int sH; // Screen Height
         bool showInv = false; // shows the Buy/Sell Menu in-game
         bool showButton = true; // enables/Disable the button for showing the buy/sell menu
+        bool timeIncreaseToggle = false;
         Rect panelRect;
         Rect logoRect;
         Rect healthRect;
@@ -60,6 +65,33 @@ namespace TowerDefense
         }
         void OnGUI()
         {
+            // Constant Buttons
+            if(!waveStarted)
+            {
+                if (GUI.Button(new Rect(0.5f * sW, 0.5f * sH, 0.5f * sW, 0.5f * sH), "Play"))
+                {
+                    waveStarted = true;
+                }
+            }
+            else if (waveStarted)
+            {
+                if (GUI.Button(new Rect(0.5f * sW, 0.5f * sH, 0.5f * sW, 0.5f * sH), "Fast Forward"))
+                {
+                    timeIncreaseToggle = !timeIncreaseToggle;
+                    if (timeIncreaseToggle)
+                    {
+                        Time.timeScale = timeSpeed;
+                    }
+                    else
+                    {
+                        Time.timeScale = 1f;
+                    }
+                }
+            }
+            
+
+
+
             // Background Panel
             float panelX = panelManifold.GetValue(showInv);
             panelRect = new Rect(panelX * sW, 0, 6.5f * sW, 9.5f * sH);
