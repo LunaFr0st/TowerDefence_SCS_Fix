@@ -18,37 +18,33 @@ namespace TowerDefense
         }
         void Start()
         {
-            InvokeRepeating("IMASCRUB",3,5);
+            InvokeRepeating("IMASCRUB",3,1);
         }
         void IMASCRUB()
         {
-            GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation);
-            enemyLeftToSpawn--;
+            if(enemyLeftToSpawn > 0)
+            {
+                GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation);
+                enemyLeftToSpawn--;
+            }
+            
         }
-      /*  void FixedUpdate()
+        void FixedUpdate()
         {
-
-            if (enemyLeftToSpawn != 0)
-            {
-                StartCoroutine("WaitForSpawn");
-            }
-            else if (enemyLeftToSpawn < 0)
-            {
-                StopCoroutine("WaitForSpawn");
-            }
-        }*/
+            //StartCoroutine(WaitForSpawn());
+        }
         void Spawn()
         {
-            GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation);
+            GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation.transform);
             AIAgent cloneComp = clone.GetComponent<AIAgent>();
             enemyLeftToSpawn--;
         }
         IEnumerator WaitForSpawn()
         {
-            GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation);
             enemyLeftToSpawn--;
-            yield return new WaitForSeconds(2f);
-            
+            yield return new WaitForSeconds(5);
+            GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation.transform);
+
         }
     }
 }
