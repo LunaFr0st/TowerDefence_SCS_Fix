@@ -11,46 +11,57 @@ namespace TowerDefense
         private int waveNum = 0;
         public Transform spawnLocation;
         public GameObject[] avalEnemies;
+        public float timer;
+        public float spawnDelay = 0.5f;
 
 
         void Awake()
         {
-            enemyLeftToSpawn = 5;
+            enemyLeftToSpawn = waveNum + 5;
+            levelGUI = GameObject.Find("GUI").GetComponent<LevelGUIManager>();
         }
-        void Start()
+        //void Start()
+        //{
+        //    if (levelGUI.waveStarted)
+        //    {
+        //        InvokeRepeating("Spawner", 0, 1);
+        //    }
+        //}
+        //void Spawner()
+        //{
+        //    if (enemyLeftToSpawn > 0)
+        //    {
+        //        
+        //        enemyLeftToSpawn--;
+        //    }
+
+        //}
+        void Update()
         {
-            //if (levelGUI.waveStarted)
-            //{
-                
-            //}
-            InvokeRepeating("Spawner", 0, 1);
+            if (levelGUI.waveStarted)
+            {
+                if (enemyLeftToSpawn > 0)
+                {
+                    timer += Time.deltaTime;
+                    if (timer >= spawnDelay)
+                    {
+                        Instantiate(avalEnemies[enemyID], spawnLocation);
+                        enemyLeftToSpawn--;
+                        timer = 0;
+                    }
+                }
+            }
+
 
         }
-        void Spawner()
-        {
-            if(enemyLeftToSpawn > 0)
-            {
-                GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation);
-                enemyLeftToSpawn--;
-            }
-            
-        }
-        //void FixedUpdate()
-        //{
-        //    //StartCoroutine(WaitForSpawn());
-        //}
-        //void Spawn()
-        //{
-        //    GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation.transform);
-        //    AIAgent cloneComp = clone.GetComponent<AIAgent>();
-        //    enemyLeftToSpawn--;
-        //}
         //IEnumerator WaitForSpawn()
         //{
-        //    enemyLeftToSpawn--;
-        //    yield return new WaitForSeconds(5);
-        //    GameObject clone = Instantiate(avalEnemies[enemyID], spawnLocation.transform);
 
+        //    yield return new WaitForSeconds(1);
+        //    if (enemyLeftToSpawn > 0)
+        //    {
+
+        //    }
         //}
     }
 }
