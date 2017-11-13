@@ -8,20 +8,21 @@ namespace TowerDefense
     {
         public Camera cam;
         public GameObject[] towersAval;
+        public int towerID = 0;
         void Update()
         {
             if (Input.GetMouseButtonDown(0))
             {
-                Vector3 mousePos = Input.mousePosition;
                 RaycastHit hit;
-                Ray ray = cam.ScreenPointToRay(mousePos);
-                if(Physics.Raycast(ray, out hit))
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, out hit))
                 {
-                    Debug.Log(hit.transform.name);
-                    if(hit.transform.tag == "Grass")
+                    if (hit.collider.tag == "Grass")
                     {
-                        mousePos.y = 2;
-                        Instantiate(towersAval[0], mousePos/2, Quaternion.identity);
+                        GameObject clone = Instantiate(towersAval[towerID], ray.GetPoint(86), Quaternion.identity);
+                        clone.transform.position = new Vector3(clone.transform.position.x, 2, clone.transform.position.z);
+                        Debug.Log(clone.transform.position.x + ", " + clone.transform.position.y + ", " + clone.transform.position.z);
                     }
                 }
             }
