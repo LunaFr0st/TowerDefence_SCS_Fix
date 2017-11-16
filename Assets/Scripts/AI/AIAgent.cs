@@ -8,13 +8,14 @@ namespace TowerDefense
     public class AIAgent : MonoBehaviour
     {
        
-        public Transform target;
+        public GameObject target;
 
         private NavMeshAgent nav;
         // Use this for initialization
         void Awake()
         {
             nav = GetComponent<NavMeshAgent>();
+            target = GameObject.Find("Castle");
         }
 
         // Update is called once per frame
@@ -22,7 +23,7 @@ namespace TowerDefense
         {
             if (target != null)
             {
-                nav.SetDestination(target.position);
+                nav.SetDestination(target.transform.position);
             }
         }
     }
