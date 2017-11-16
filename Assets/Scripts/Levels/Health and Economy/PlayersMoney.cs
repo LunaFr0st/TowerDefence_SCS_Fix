@@ -4,9 +4,9 @@ using UnityEngine;
 
 namespace TowerDefense
 {
-    public class PlayersMoney : LevelGUIManager
+    public class PlayersMoney : MonoBehaviour
     {
-        protected int gold;
+        public int gold = 450;
         public string goldText;
 
         public void Update()
@@ -24,7 +24,7 @@ namespace TowerDefense
                 goldText = gold.ToString();
             }
         }
-        protected void SpendGold(int amountSpent)
+        public void SpendGold(int amountSpent)
         {
             if(!(gold < amountSpent))
             {
@@ -32,7 +32,7 @@ namespace TowerDefense
             }
             
         }
-        protected void RecieveGold(int gainedGold)
+        public void RecieveGold(int gainedGold)
         {
             gold = gold + gainedGold;
         }

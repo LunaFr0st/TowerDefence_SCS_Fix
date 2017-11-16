@@ -6,8 +6,20 @@ namespace TowerDefense
 {
     public class CastleHealth : MonoBehaviour
     {
-        protected float health = 1000f;
-        protected bool castleDestroyed = false;
+        [Header("Values")]
+        public float health = 1000f;
+        public float maxHealth = 2000f;
+        public int reviveCost = 500000;
+        [Header("Booleans")]
+        public bool castleDestroyed = false;
+        public bool playerRevive = false;
+        
+
+        private PlayersMoney money;
+        void Awake()
+        {
+            money = GetComponent<PlayersMoney>();
+        }
         void Update()
         {
             if (health <= 0)
@@ -20,17 +32,24 @@ namespace TowerDefense
                 health = 0;
             }
         }
-        protected void recieveDamage(int damageReceived)
+        public void recieveDamage(int damageReceived)
         {
             if(!(health <= 0))
             {
                 health = health - damageReceived;
             }
         }
-        protected void healCastle(int healAmount)
+        public void healCastle(int healAmount)
         {
             if(!(health <= 0))
-            health = health + healAmount;
+            {
+                health = health + healAmount;
+            }
+            if (playerRevive)
+            {
+                money.SpendGold(reviveCost);
+                health = health + 1000;
+            }
         }
     }
 }
