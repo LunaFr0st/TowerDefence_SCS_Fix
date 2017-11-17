@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -44,6 +45,9 @@ namespace TowerDefense
 
         int sW; // Screen Width
         int sH; // Screen Height
+
+        int health; // tower health
+        int money; //
         bool showInv = false; // shows the Buy/Sell Menu in-game
         bool showButton = true; // enables/Disable the button for showing the buy/sell menu
         bool timeIncreaseToggle = false;
@@ -51,6 +55,7 @@ namespace TowerDefense
         Rect logoRect;
         Rect healthRect;
         Rect moneyRect;
+        Rect healthBG;
         Vector2 scrollbar = Vector2.zero;
 
 
@@ -59,6 +64,13 @@ namespace TowerDefense
         {
 
         }
+
+        private void Start()
+        {
+            health = 100;
+            money = 100;
+        }
+
         void Update()
         {
             sW = Screen.width / 16;
@@ -102,16 +114,22 @@ namespace TowerDefense
             //ContentPanel
             float contentX = contentManifold.GetValue(showInv);
             logoRect = new Rect(contentX * sW * 1.125f, sH, 4 * sW, sH);
-            healthRect = new Rect(contentX * sW * 1.125f, 2*sH, 4 * sW, sH);
-            moneyRect = new Rect(contentX * sW * 1.39f, 2 * sH, 4 * sW, sH);
+            healthRect = new Rect(contentX * sW * 1.28f, 2.5f * sH, 4 * sW, sH);
+            moneyRect = new Rect(contentX * sW * 1.125f, 2 * sH, 4 * sW, sH);
+
+            healthBG = new Rect(contentX * sW * 1.125f, 3 * sH, 4 * sW, 0.5f * sH);
+
             Rect towerRect = new Rect(contentX * sW * 1.39f, 2 * sH, 4 * sW, sH);
             Rect healthContRect = new Rect(contentX * sW * 1.125f, 2.5f * sH, 4 * sW, sH);
             Rect moneyContRect = new Rect(contentX * sW * 1.39f, 2.5f * sH, 4 * sW, sH);
+
+            GUI.Box(healthBG, "");
+
             GUI.Box(logoRect, "", Logo);
             GUI.Label(healthRect, "Health");
             GUI.Label(moneyRect, "Money");
-            GUI.Label(healthContRect, "Castle.health");
-            GUI.Label(moneyContRect, "Player.money");
+            // GUI.Label(healthContRect, "Castle.health");
+            GUI.Label(moneyContRect, Convert.ToString(money) + " G");
 
 
             // Button
