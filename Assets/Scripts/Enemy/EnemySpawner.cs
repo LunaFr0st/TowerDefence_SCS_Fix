@@ -5,10 +5,11 @@ namespace TowerDefense
 {
     public class EnemySpawner : MonoBehaviour
     {
+        WaveModule wavemod;
         LevelGUIManager levelGUI;
+        public int totalEnemies = 5;
         public int enemyLeftToSpawn;
         public int enemyID;
-        private int waveNum = 0;
         public Transform spawnLocation;
         public GameObject[] avalEnemies;
         public float timer;
@@ -17,25 +18,10 @@ namespace TowerDefense
 
         void Awake()
         {
-            enemyLeftToSpawn = waveNum + 5;
+            wavemod = GameObject.Find("WaveModule").GetComponent<WaveModule>();
             levelGUI = GameObject.Find("GUI").GetComponent<LevelGUIManager>();
+            enemyLeftToSpawn = totalEnemies;
         }
-        //void Start()
-        //{
-        //    if (levelGUI.waveStarted)
-        //    {
-        //        InvokeRepeating("Spawner", 0, 1);
-        //    }
-        //}
-        //void Spawner()
-        //{
-        //    if (enemyLeftToSpawn > 0)
-        //    {
-        //        
-        //        enemyLeftToSpawn--;
-        //    }
-
-        //}
         void Update()
         {
             if (levelGUI.waveStarted)
@@ -51,18 +37,11 @@ namespace TowerDefense
                     }
                 }
             }
-
-
+            else
+            {
+                wavemod.WaveManager(5);
+            }
         }
-        //IEnumerator WaitForSpawn()
-        //{
-
-        //    yield return new WaitForSeconds(1);
-        //    if (enemyLeftToSpawn > 0)
-        //    {
-
-        //    }
-        //}
     }
 }
 
