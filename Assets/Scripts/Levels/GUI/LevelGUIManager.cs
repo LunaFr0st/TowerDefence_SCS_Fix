@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TowerDefense;
 using UnityEngine;
 
 namespace TowerDefense
@@ -40,14 +41,18 @@ namespace TowerDefense
         public LerpManifold contentManifold = new LerpManifold();
         public LerpManifold buttonManifold = new LerpManifold(15.5f, 15.5f, 9.5f, 1);
 
+        PlayersMoney playerMoney;
+        CastleHealth castleHealth;
+
+        public string money;  //
         public bool waveStarted = false;
         public float timeSpeed = 2f;
 
         int sW; // Screen Width
         int sH; // Screen Height
 
-        int health; // tower health
-        int money; //
+        float health; // tower health
+        
         bool showInv = false; // shows the Buy/Sell Menu in-game
         bool showButton = true; // enables/Disable the button for showing the buy/sell menu
         bool timeIncreaseToggle = false;
@@ -62,13 +67,13 @@ namespace TowerDefense
         //Functions
         void Awake()
         {
-
+            playerMoney = GetComponent<PlayersMoney>();
+            castleHealth = GetComponent<CastleHealth>();
         }
 
         private void Start()
         {
-            health = 100;
-            money = 100;
+            health = castleHealth.health;
         }
 
         void Update()
@@ -114,22 +119,22 @@ namespace TowerDefense
             //ContentPanel
             float contentX = contentManifold.GetValue(showInv);
             logoRect = new Rect(contentX * sW * 1.125f, sH, 4 * sW, sH);
-            healthRect = new Rect(contentX * sW * 1.28f, 2.5f * sH, 4 * sW, sH);
-            moneyRect = new Rect(contentX * sW * 1.125f, 2 * sH, 4 * sW, sH);
+            healthRect = new Rect(contentX * sW * 1.26f, 2.2f * sH, 4 * sW, sH);
+            moneyRect = new Rect(contentX * sW * 1.125f, 3.25f * sH, 4 * sW, sH);
 
-            healthBG = new Rect(contentX * sW * 1.125f, 3 * sH, 4 * sW, 0.5f * sH);
+            healthBG = new Rect(contentX * sW * 1.125f, 2.5f * sH, 4 * sW, 0.5f * sH);
 
             Rect towerRect = new Rect(contentX * sW * 1.39f, 2 * sH, 4 * sW, sH);
             Rect healthContRect = new Rect(contentX * sW * 1.125f, 2.5f * sH, 4 * sW, sH);
-            Rect moneyContRect = new Rect(contentX * sW * 1.39f, 2.5f * sH, 4 * sW, sH);
+            Rect moneyContRect = new Rect(contentX * sW * 1.25f, 3.25f * sH, 4 * sW, sH);
 
             GUI.Box(healthBG, "");
 
             GUI.Box(logoRect, "", Logo);
-            GUI.Label(healthRect, "Health");
+            GUI.Label(healthRect, "Castle Health");
             GUI.Label(moneyRect, "Money");
             // GUI.Label(healthContRect, "Castle.health");
-            GUI.Label(moneyContRect, Convert.ToString(money) + " G");
+            GUI.Label(moneyContRect, playerMoney.goldText + " G");
 
 
             // Button
