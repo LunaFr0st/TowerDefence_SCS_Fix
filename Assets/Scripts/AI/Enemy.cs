@@ -7,7 +7,13 @@ namespace TowerDefense
     public class Enemy : MonoBehaviour
     {
         public float health = 100f; // Enemie's health which starts at 100
+        public int goldToGive = 100;
 
+        PlayersMoney money;
+        void Awake()
+        {
+            money = GameObject.Find("GUI").GetComponent<PlayersMoney>();
+        }
         public void DealDamage(float damage)
         {
             // SET health -= damage
@@ -17,6 +23,7 @@ namespace TowerDefense
             {
                 // Destroy the enemy
                 Destroy(gameObject);
+                money.RecieveGold(goldToGive);
             }
         }
     }
