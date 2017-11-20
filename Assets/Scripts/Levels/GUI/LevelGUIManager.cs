@@ -43,6 +43,8 @@ namespace TowerDefense
 
         PlayersMoney playerMoney;
         CastleHealth castleHealth;
+        EnemySpawner spawner;
+        WaveModule wave;
 
         public string money;  //
         public bool waveStarted = false;
@@ -68,6 +70,8 @@ namespace TowerDefense
         {
             playerMoney = GetComponent<PlayersMoney>();
             castleHealth = GetComponent<CastleHealth>();
+            spawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
+            wave = GameObject.Find("WaveModule").GetComponent<WaveModule>();
         }
 
         private void Start()
@@ -79,6 +83,7 @@ namespace TowerDefense
         {
             sW = Screen.width / 16;
             sH = Screen.height / 9;
+            Debug.Log(waveStarted);
 
         }
         void OnGUI()
@@ -89,6 +94,7 @@ namespace TowerDefense
                 if (GUI.Button(new Rect(0.5f * sW, 0.5f * sH, 0.5f * sW, 0.5f * sH), "Play"))
                 {
                     waveStarted = true;
+                    spawner.enemyLeftToSpawn = spawner.totalEnemies;
                 }
             }
             else if (waveStarted)
