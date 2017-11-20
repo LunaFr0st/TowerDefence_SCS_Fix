@@ -36,6 +36,10 @@ namespace TowerDefense
             {
                 StopAllCoroutines();
             }
+
+        }
+        void LateUpdate()
+        {
             
         }
         public void WaveManager(int increaseEnemyCount)
@@ -45,13 +49,15 @@ namespace TowerDefense
         }
         IEnumerator WaveEndCheck()
         {
-            yield return new WaitForSeconds(0);
-            if (enemiesKilled == totalEnemy)
+            yield return new WaitForEndOfFrame();
+            if (enemiesKilled >= totalEnemy)
             {
+                enemiesKilled = 0;
                 waveEnded = true;
                 gui.waveStarted = false;
-                enemiesKilled = 0;
+                
             }
+            
         }
     }
 }
