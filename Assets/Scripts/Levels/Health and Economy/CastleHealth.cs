@@ -10,6 +10,8 @@ namespace TowerDefense
         public float health = 1000f;
         public float maxHealth = 2000f;
         public int reviveCost = 500000;
+        public float timer;
+        public float attacktimer = 0.5f;
         [Header("Booleans")]
         public bool castleDestroyed = false;
         public bool playerRevive = false;
@@ -22,33 +24,48 @@ namespace TowerDefense
         }
         void Update()
         {
-            if (health <= 0)
+            if (health <= 0 && !playerRevive)
             {
                 health = 0;
                 castleDestroyed = true;
             }
-            if (castleDestroyed)
-            {
-                health = 0;
-            }
         }
-        public void recieveDamage(int damageReceived)
+        public void ReceieveDamage(int damageReceived)
         {
             if(!(health <= 0))
             {
                 health = health - damageReceived;
             }
         }
-        public void healCastle(int healAmount)
+        public void HealCastle(int healAmount)
         {
             if(!(health <= 0))
             {
                 health = health + healAmount;
             }
-            if (playerRevive)
+            
+        }
+        public void PlayerRevive(bool canRevive)
+        {
+            canRevive = playerRevive;
+            if (canRevive)
             {
                 money.SpendGold(reviveCost);
+                castleDestroyed = false;
                 health = health + 1000;
+                canRevive = false;
+            }
+        }
+        void OnTriggerEnter(Collider col)
+        {
+            if(col.gameObject.tag == "Enemy")
+            {
+                timer += Time.deltaTime;
+                if(timer >= attacktimer)
+                {
+                    ReceieveDamage(1);
+                    timer = 0;
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TowerDefense;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TowerDefense
 {
@@ -45,6 +46,7 @@ namespace TowerDefense
         CastleHealth castleHealth;
         EnemySpawner spawner;
         WaveModule wave;
+        TowerCreator creator;
 
         public string money;  //
         public bool waveStarted = false;
@@ -69,9 +71,10 @@ namespace TowerDefense
         void Awake()
         {
             playerMoney = GetComponent<PlayersMoney>();
-            castleHealth = GetComponent<CastleHealth>();
+            castleHealth = GameObject.Find("Castle").GetComponent<CastleHealth>();
             spawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
             wave = GameObject.Find("WaveModule").GetComponent<WaveModule>();
+            creator = GameObject.Find("Tower_Spawner").GetComponent<TowerCreator>();
         }
 
         private void Start()
@@ -112,7 +115,7 @@ namespace TowerDefense
                     }
                 }
             }
-
+            GUI.Label(new Rect(15f * sW, 0.5f * sH, 1f * sW, 1f * sH), castleHealth.health.ToString());
 
 
 
@@ -128,7 +131,7 @@ namespace TowerDefense
             moneyRect = new Rect(contentX * sW * 1.125f, 3.25f * sH, 4 * sW, sH);
 
             Rect towerRect = new Rect(contentX * sW * 1.39f, 2 * sH, 4 * sW, sH);
-            Rect healthContRect = new Rect(contentX * sW * 1.125f, 2.5f * sH, 4 * sW, 0.5f * sH);
+            Rect healthContRect = new Rect(contentX * sW * 1.125f, 2.5f * sH, (sW * castleHealth.health) / 250, 0.5f * sH);
             Rect moneyContRect = new Rect(contentX * sW * 1.25f, 3.25f * sH, 4 * sW, sH);
 
             // Content Panel - Placement
@@ -171,6 +174,58 @@ namespace TowerDefense
             scrollbar = GUI.BeginScrollView(towerRect, scrollbar, new Rect(sW, sH, sW, sH));
 
             GUI.EndScrollView();
+
+            //Death Screen Overlay
+            if (castleHealth.castleDestroyed)
+            {
+                Debug.Log("Im Dead");
+                creator.canPlace = false;
+                Time.timeScale = 0.5f;
+                int i = 0;
+                bool displayNoGold = false;
+                GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "");
+                GUI.Label(new Rect(8f * sW, sH * i, 4f * sW, sH), "You Died!");
+                i++;
+                GUI.Label(new Rect(7.4f * sW, sH * i, 4f * sW, sH), "Want to keep Playing?");
+                i++;
+                GUI.Label(new Rect(7.4f * sW, sH * i, 4f * sW, sH), "Cost to Revive: " + castleHealth.reviveCost.ToString() + " G");
+                i++;
+                if (GUI.Button(new Rect(6.5f * sW, sH * i, 2f * sW, sH), "Yes"))
+                {
+                    if(playerMoney.gold >= castleHealth.reviveCost)
+                    {
+                        Debug.Log("YESSSSS");
+                        castleHealth.castleDestroyed = false;
+                        castleHealth.PlayerRevive(true);
+                        Time.timeScale = 1f;
+                        creator.canPlace = true;
+                    }
+                    else if(playerMoney.gold <= castleHealth.reviveCost)
+                    {
+                        Debug.Log("NOOOOOOOO");
+                        displayNoGold = true;
+                    }
+                }
+                if (displayNoGold)
+                {
+                    float timer = 0f;
+                    float displayTime = 4f;
+                    timer += Time.deltaTime;
+                    if (timer < displayTime)
+                    {
+                        GUI.Label(new Rect(7.4f * sW, sH, 4f * sW, sH), "Not enough Gold");
+                        Debug.Log("Bobby J");
+                    }
+                    else
+                    {
+                        displayNoGold = false;
+                    }
+                }
+                if (GUI.Button(new Rect(8.5f * sW, sH * i, 2f * sW, sH), "No"))
+                {
+                    SceneManager.LoadSceneAsync("Main Menu");
+                }
+            }
         }
 
     }
