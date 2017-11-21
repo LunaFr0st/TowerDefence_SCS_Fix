@@ -45,6 +45,9 @@ namespace TowerDefense
         public GUIStyle fireTower = new GUIStyle();
         public GUIStyle waterTower = new GUIStyle();
         public GUIStyle arrowTower = new GUIStyle();
+        public GUIStyle tileSelect = new GUIStyle();
+        public GUIStyle playButton = new GUIStyle();
+        public GUIStyle fastForwardButton = new GUIStyle();
 
         public LerpManifold panelManifold = new LerpManifold();
         public LerpManifold contentManifold = new LerpManifold();
@@ -75,6 +78,7 @@ namespace TowerDefense
         Rect logoRect;
         Rect healthRect;
         Rect moneyRect;
+        Rect tileSelected;
         Vector2 scrollbar = Vector2.zero;
 
 
@@ -105,7 +109,7 @@ namespace TowerDefense
             // Constant Buttons
             if (!waveStarted)
             {
-                if (GUI.Button(new Rect(0.5f * sW, 0.5f * sH, 0.5f * sW, 0.5f * sH), "Play"))
+                if (GUI.Button(new Rect(0.5f * sW, 0.5f * sH, 0.75f * sW, 0.75f * sH), "", playButton))
                 {
                     waveStarted = true;
                     spawner.enemyLeftToSpawn = spawner.totalEnemies;
@@ -113,7 +117,7 @@ namespace TowerDefense
             }
             else if (waveStarted)
             {
-                if (GUI.Button(new Rect(0.5f * sW, 0.5f * sH, 0.5f * sW, 0.5f * sH), "Fast Forward"))
+                if (GUI.Button(new Rect(0.5f * sW, 0.5f * sH, 0.75f * sW, 0.75f * sH), "", fastForwardButton))
                 {
                     timeIncreaseToggle = !timeIncreaseToggle;
                     if (timeIncreaseToggle)
@@ -127,6 +131,7 @@ namespace TowerDefense
                 }
             }
             GUI.Label(new Rect(15f * sW, 0.5f * sH, 1f * sW, 1f * sH), castleHealth.health.ToString());
+            GUI.Label(new Rect(14.4f * sW, 0.5f * sH, 0.5f * sW, 0.5f * sH), "", healthBarBG);
 
 
 
@@ -149,14 +154,16 @@ namespace TowerDefense
 
             int j = 3;
             float q = 0;
-            Rect fireTowerRect = new Rect(contentX * (sW *1.125f) + (sW * q), j * (1.25f * sH), 2 * sW, 2 * sH);
-            q+=2.5f;
+
+            Rect fireTowerRect = new Rect(contentX * (sW * 1.125f) + (sW * q), j * (1.25f * sH), 2 * sW, 2 * sH);
+            q += 2.5f;
             Rect waterTowerRect = new Rect(contentX * (sW * 1.125f) + (sW * q), j * (1.25f * sH), 2 * sW, 2 * sH);
             j++;
             q = 0;
             Rect earthTowerRect = new Rect(contentX * (sW * 1.125f) + (sW * q), j * (1.5f * sH), 2 * sW, 2 * sH);
             q += 2.5f;
             Rect arrowTowerRect = new Rect(contentX * (sW * 1.125f) + (sW * q), j * (1.5f * sH), 2 * sW, 2 * sH);
+
 
             // Content Panel - Placement
             GUI.Box(logoRect, "", Logo); // Logo
@@ -171,23 +178,32 @@ namespace TowerDefense
 
             if (GUI.Button(new Rect(arrowTowerRect), "225 G", arrowTower))
             {
-                creator.towerID = 3;
+                Debug.Log("Base Tower Selected");
+                creator.towerID = 0;
+                tileSelected = arrowTowerRect;
             }
             j++;
             if (GUI.Button(new Rect(fireTowerRect), "500 G", fireTower))
             {
-                creator.towerID = 2;
+                Debug.Log("Fire Tower Selected");
+                creator.towerID = 1;
+                tileSelected = fireTowerRect;
             }
-            
+
             if (GUI.Button(new Rect(waterTowerRect), "500 G", waterTower))
             {
-                creator.towerID = 0;
+                Debug.Log("Water Tower Selected");
+                creator.towerID = 2;
+                tileSelected = waterTowerRect;
             }
             j++;
             if (GUI.Button(new Rect(earthTowerRect), "500 G", earthTower))
             {
-                creator.towerID = 1;
+                Debug.Log("Earth Tower Selected");
+                creator.towerID = 3;
+                tileSelected = earthTowerRect;
             }
+
             #region Open/Close Button
             // Button
             float buttonX = buttonManifold.GetValue(showButton);
@@ -211,6 +227,7 @@ namespace TowerDefense
                     showInv = !showInv;
                     showButton = true;
                 }
+                GUI.Box(tileSelected, "", tileSelect);
             }
             else
             {

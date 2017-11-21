@@ -23,7 +23,7 @@ namespace TowerDefense
         void Update()
         {
             canPlace = !gui.waveStarted;
-            if(towerID == 0)
+            if (towerID == 0)
             {
                 towerCost = 225;
             }
@@ -31,30 +31,26 @@ namespace TowerDefense
             {
                 towerCost = 500;
             }
-            if (canPlace)
+            if (money.gold >= towerCost)
             {
-                if (money.gold >= towerCost)
+                if (Input.GetMouseButtonDown(1))
                 {
-                    if (Input.GetMouseButtonDown(0))
-                    {
-                        RaycastHit hit;
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit hit;
+                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                        if (Physics.Raycast(ray, out hit))
+                    if (Physics.Raycast(ray, out hit))
+                    {
+                        if (hit.collider.tag == "Grass")
                         {
-                            if (hit.collider.tag == "Grass")
-                            {
-                                GameObject clone = Instantiate(towersAval[towerID], ray.GetPoint(86), Quaternion.identity);
-                                clone.transform.position = new Vector3(clone.transform.position.x, 3, clone.transform.position.z);
-                                Debug.Log(clone.transform.position.x + ", " + clone.transform.position.y + ", " + clone.transform.position.z);
-                                money.SpendGold(towerCost);
-                            }
+                            GameObject clone = Instantiate(towersAval[towerID], ray.GetPoint(86), Quaternion.identity);
+                            clone.transform.position = new Vector3(clone.transform.position.x, 3, clone.transform.position.z);
+                            Debug.Log(clone.transform.position.x + ", " + clone.transform.position.y + ", " + clone.transform.position.z);
+                            money.SpendGold(towerCost);
                         }
                     }
                 }
             }
         }
-
     }
 }
 
