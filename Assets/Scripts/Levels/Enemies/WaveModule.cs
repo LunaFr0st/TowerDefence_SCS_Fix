@@ -7,7 +7,9 @@ namespace TowerDefense
     {
         public bool waveEnded = false;
         public int enemiesLeft;
+        public int enemiesKilled;
         public int waveRound;
+        public int totalEnemy;
 
         LevelGUIManager gui;
         EnemySpawner spawner;
@@ -16,30 +18,46 @@ namespace TowerDefense
             gui = GameObject.Find("GUI").GetComponent<LevelGUIManager>();
             spawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
         }
+        void OnEnable()
+        {
+
+        }
         void Update()
         {
             enemiesLeft = GameObject.Find("SpawnPoint").transform.childCount;
             Debug.Log(enemiesLeft);
-            
-        }
-        void FixedUpdate()
-        {
-            if (gui.waveStarted == true)
+            totalEnemy = spawner.totalEnemies;
+            if (gui.waveStarted)
             {
-                if (enemiesLeft == 0)
-                {
-                    waveEnded = true;
-                    gui.waveStarted = !waveEnded;
-                }
+                StartCoroutine(WaveEndCheck());
+                return;
             }
+            else
+            {
+                StopAllCoroutines();
+            }
+
+        }
+        void LateUpdate()
+        {
+            
         }
         public void WaveManager(int increaseEnemyCount)
         {
-            if (waveEnded)
+            waveRound++;
+            spawner.totalEnemies += increaseEnemyCount;
+        }
+        IEnumerator WaveEndCheck()
+        {
+            yield return new WaitForEndOfFrame();
+            if (enemiesKilled >= totalEnemy)
             {
-                waveRound++;
-                spawner.totalEnemies += increaseEnemyCount;
+                enemiesKilled = 0;
+                waveEnded = true;
+                gui.waveStarted = false;
+                
             }
+            
         }
     }
 }

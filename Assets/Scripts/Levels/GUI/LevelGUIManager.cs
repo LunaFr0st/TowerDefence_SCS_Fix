@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TowerDefense;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace TowerDefense
 {
@@ -37,12 +38,28 @@ namespace TowerDefense
         public GUIStyle background = new GUIStyle();
         public GUIStyle button = new GUIStyle();
         public GUIStyle Logo = new GUIStyle();
+        public GUIStyle healthBar = new GUIStyle();
+        public GUIStyle healthBarBG = new GUIStyle();
+
+        public GUIStyle earthTower = new GUIStyle();
+        public GUIStyle fireTower = new GUIStyle();
+        public GUIStyle waterTower = new GUIStyle();
+        public GUIStyle arrowTower = new GUIStyle();
+        public GUIStyle tileSelect = new GUIStyle();
+        public GUIStyle playButton = new GUIStyle();
+        public GUIStyle fastForwardButton = new GUIStyle();
+
         public LerpManifold panelManifold = new LerpManifold();
         public LerpManifold contentManifold = new LerpManifold();
         public LerpManifold buttonManifold = new LerpManifold(15.5f, 15.5f, 9.5f, 1);
 
         PlayersMoney playerMoney;
         CastleHealth castleHealth;
+        EnemySpawner spawner;
+        WaveModule wave;
+        TowerCreator creator;
+
+        public float healthContentScale = 1f;
 
         public string money;  //
         public bool waveStarted = false;
@@ -52,6 +69,7 @@ namespace TowerDefense
         int sH; // Screen Height
 
         float health; // tower health
+        float healthCounter;
 
         bool showInv = false; // shows the Buy/Sell Menu in-game
         bool showButton = true; // enables/Disable the button for showing the buy/sell menu
@@ -60,6 +78,7 @@ namespace TowerDefense
         Rect logoRect;
         Rect healthRect;
         Rect moneyRect;
+        Rect tileSelected;
         Vector2 scrollbar = Vector2.zero;
 
 
@@ -67,7 +86,10 @@ namespace TowerDefense
         void Awake()
         {
             playerMoney = GetComponent<PlayersMoney>();
-            castleHealth = GetComponent<CastleHealth>();
+            castleHealth = GameObject.Find("Castle").GetComponent<CastleHealth>();
+            spawner = GameObject.Find("Spawner").GetComponent<EnemySpawner>();
+            wave = GameObject.Find("WaveModule").GetComponent<WaveModule>();
+            creator = GameObject.Find("Tower_Spawner").GetComponent<TowerCreator>();
         }
 
         private void Start()
@@ -79,21 +101,23 @@ namespace TowerDefense
         {
             sW = Screen.width / 16;
             sH = Screen.height / 9;
-
+            Debug.Log(waveStarted);
+            healthCounter = (castleHealth.health / 37.5f);
         }
         void OnGUI()
         {
             // Constant Buttons
             if (!waveStarted)
             {
-                if (GUI.Button(new Rect(0.5f * sW, 0.5f * sH, 0.5f * sW, 0.5f * sH), "Play"))
+                if (GUI.Button(new Rect(0.5f * sW, 0.5f * sH, 0.75f * sW, 0.75f * sH), "", playButton))
                 {
                     waveStarted = true;
+                    spawner.enemyLeftToSpawn = spawner.totalEnemies;
                 }
             }
             else if (waveStarted)
             {
-                if (GUI.Button(new Rect(0.5f * sW, 0.5f * sH, 0.5f * sW, 0.5f * sH), "Fast Forward"))
+                if (GUI.Button(new Rect(0.5f * sW, 0.5f * sH, 0.75f * sW, 0.75f * sH), "", fastForwardButton))
                 {
                     timeIncreaseToggle = !timeIncreaseToggle;
                     if (timeIncreaseToggle)
@@ -106,7 +130,8 @@ namespace TowerDefense
                     }
                 }
             }
-
+            GUI.Label(new Rect(15f * sW, 0.5f * sH, 1f * sW, 1f * sH), castleHealth.health.ToString());
+            GUI.Label(new Rect(14.4f * sW, 0.5f * sH, 0.5f * sW, 0.5f * sH), "", healthBarBG);
 
 
 
@@ -122,17 +147,64 @@ namespace TowerDefense
             moneyRect = new Rect(contentX * sW * 1.125f, 3.25f * sH, 4 * sW, sH);
 
             Rect towerRect = new Rect(contentX * sW * 1.39f, 2 * sH, 4 * sW, sH);
-            Rect healthContRect = new Rect(contentX * sW * 1.125f, 2.5f * sH, 4 * sW, 0.5f * sH);
+            Rect healthContRectBG = new Rect(contentX * sW * 1.125f, 2.5f * sH, (0.7f * sW), (1 * sH) * .7f);
+
+            Rect healthContRect = new Rect(contentX * sW * 1.125f, 2.5f * sH, (6 * sW) * .7f, (1 * sH) * .7f);
             Rect moneyContRect = new Rect(contentX * sW * 1.25f, 3.25f * sH, 4 * sW, sH);
+
+            int j = 3;
+            float q = 0;
+
+            Rect fireTowerRect = new Rect(contentX * (sW * 1.125f) + (sW * q), j * (1.25f * sH), 2 * sW, 2 * sH);
+            q += 2.5f;
+            Rect waterTowerRect = new Rect(contentX * (sW * 1.125f) + (sW * q), j * (1.25f * sH), 2 * sW, 2 * sH);
+            j++;
+            q = 0;
+            Rect earthTowerRect = new Rect(contentX * (sW * 1.125f) + (sW * q), j * (1.5f * sH), 2 * sW, 2 * sH);
+            q += 2.5f;
+            Rect arrowTowerRect = new Rect(contentX * (sW * 1.125f) + (sW * q), j * (1.5f * sH), 2 * sW, 2 * sH);
+
 
             // Content Panel - Placement
             GUI.Box(logoRect, "", Logo); // Logo
             GUI.Label(healthRect, "Castle Health"); // Castle's Health
-            GUI.Box(healthContRect, "");
+            for (int i = 0; i < healthCounter; i++)
+            {
+                GUI.Box(new Rect((contentX * sW * 1.125f) + (i * (sW / 1.425f)), 2.5f * sH, (0.7f * sW), (1 * sH) * .7f), "", healthBarBG);
+            }
+            GUI.Box(healthContRect, "", healthBar);
             GUI.Label(moneyRect, "Money"); // Money
             GUI.Label(moneyContRect, playerMoney.goldText + " G");
 
+            if (GUI.Button(new Rect(arrowTowerRect), "225 G", arrowTower))
+            {
+                Debug.Log("Base Tower Selected");
+                creator.towerID = 0;
+                tileSelected = arrowTowerRect;
+            }
+            j++;
+            if (GUI.Button(new Rect(fireTowerRect), "500 G", fireTower))
+            {
+                Debug.Log("Fire Tower Selected");
+                creator.towerID = 1;
+                tileSelected = fireTowerRect;
+            }
 
+            if (GUI.Button(new Rect(waterTowerRect), "500 G", waterTower))
+            {
+                Debug.Log("Water Tower Selected");
+                creator.towerID = 2;
+                tileSelected = waterTowerRect;
+            }
+            j++;
+            if (GUI.Button(new Rect(earthTowerRect), "500 G", earthTower))
+            {
+                Debug.Log("Earth Tower Selected");
+                creator.towerID = 3;
+                tileSelected = earthTowerRect;
+            }
+
+            #region Open/Close Button
             // Button
             float buttonX = buttonManifold.GetValue(showButton);
 
@@ -155,6 +227,7 @@ namespace TowerDefense
                     showInv = !showInv;
                     showButton = true;
                 }
+                GUI.Box(tileSelected, "", tileSelect);
             }
             else
             {
@@ -165,6 +238,60 @@ namespace TowerDefense
             scrollbar = GUI.BeginScrollView(towerRect, scrollbar, new Rect(sW, sH, sW, sH));
 
             GUI.EndScrollView();
+            #endregion
+            #region Death Screen
+            //Death Screen Overlay
+            if (castleHealth.castleDestroyed)
+            {
+                Debug.Log("Im Dead");
+                creator.canPlace = false;
+                Time.timeScale = 0.5f;
+                int i = 0;
+                bool displayNoGold = false;
+                GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "");
+                GUI.Label(new Rect(8f * sW, sH * i, 4f * sW, sH), "You Died!");
+                i++;
+                GUI.Label(new Rect(7.4f * sW, sH * i, 4f * sW, sH), "Want to keep Playing?");
+                i++;
+                GUI.Label(new Rect(7.4f * sW, sH * i, 4f * sW, sH), "Cost to Revive: " + castleHealth.reviveCost.ToString() + " G");
+                i++;
+                if (GUI.Button(new Rect(6.5f * sW, sH * i, 2f * sW, sH), "Yes"))
+                {
+                    if (playerMoney.gold >= castleHealth.reviveCost)
+                    {
+                        Debug.Log("YESSSSS");
+                        castleHealth.castleDestroyed = false;
+                        castleHealth.PlayerRevive(true);
+                        Time.timeScale = 1f;
+                        creator.canPlace = true;
+                    }
+                    else if (playerMoney.gold <= castleHealth.reviveCost)
+                    {
+                        Debug.Log("NOOOOOOOO");
+                        displayNoGold = true;
+                    }
+                }
+                if (displayNoGold)
+                {
+                    float timer = 0f;
+                    float displayTime = 4f;
+                    timer += Time.deltaTime;
+                    if (timer < displayTime)
+                    {
+                        GUI.Label(new Rect(7.4f * sW, sH, 4f * sW, sH), "Not enough Gold");
+                        Debug.Log("Bobby J");
+                    }
+                    else
+                    {
+                        displayNoGold = false;
+                    }
+                }
+                if (GUI.Button(new Rect(8.5f * sW, sH * i, 2f * sW, sH), "No"))
+                {
+                    SceneManager.LoadSceneAsync("Level_02");
+                }
+            }
+            #endregion
         }
 
     }

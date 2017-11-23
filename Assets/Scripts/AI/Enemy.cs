@@ -10,9 +10,11 @@ namespace TowerDefense
         public int goldToGive = 100;
 
         PlayersMoney money;
+        WaveModule wave;
         void Awake()
         {
             money = GameObject.Find("GUI").GetComponent<PlayersMoney>();
+            wave = GameObject.Find("WaveModule").GetComponent<WaveModule>();
         }
         public void DealDamage(float damage)
         {
@@ -24,6 +26,7 @@ namespace TowerDefense
                 // Destroy the enemy
                 Destroy(gameObject);
                 money.RecieveGold(goldToGive);
+                wave.enemiesKilled++;
             }
         }
     }
