@@ -40,6 +40,7 @@ namespace TowerDefense
         public GUIStyle Logo = new GUIStyle();
         public GUIStyle healthBar = new GUIStyle();
         public GUIStyle healthBarBG = new GUIStyle();
+        public GUIStyle waveRoundIco = new GUIStyle();
 
         public GUIStyle earthTower = new GUIStyle();
         public GUIStyle fireTower = new GUIStyle();
@@ -52,6 +53,7 @@ namespace TowerDefense
         public LerpManifold panelManifold = new LerpManifold();
         public LerpManifold contentManifold = new LerpManifold();
         public LerpManifold buttonManifold = new LerpManifold(15.5f, 15.5f, 9.5f, 1);
+        public bool towerIsSelected = false;
 
         PlayersMoney playerMoney;
         CastleHealth castleHealth;
@@ -132,6 +134,8 @@ namespace TowerDefense
             }
             GUI.Label(new Rect(15f * sW, 0.5f * sH, 1f * sW, 1f * sH), castleHealth.health.ToString());
             GUI.Label(new Rect(14.4f * sW, 0.5f * sH, 0.5f * sW, 0.5f * sH), "", healthBarBG);
+            GUI.Label(new Rect(15f * sW, 1.15f * sH, 1f * sW, 1f * sH), wave.waveRound.ToString());
+            GUI.Label(new Rect(14.4f * sW, 1f * sH, 0.5f * sW, 0.5f * sH), "", waveRoundIco);
 
 
 
@@ -180,28 +184,46 @@ namespace TowerDefense
             {
                 Debug.Log("Base Tower Selected");
                 creator.towerID = 0;
-                tileSelected = arrowTowerRect;
+                towerIsSelected = true;
+                if (towerIsSelected)
+                    tileSelected = arrowTowerRect;
+                else
+                    tileSelected = new Rect(); 
+                
             }
             j++;
             if (GUI.Button(new Rect(fireTowerRect), "500 G", fireTower))
             {
                 Debug.Log("Fire Tower Selected");
                 creator.towerID = 1;
-                tileSelected = fireTowerRect;
+                towerIsSelected = true;
+                if (towerIsSelected)
+                    tileSelected = fireTowerRect;
+                else
+                    tileSelected = new Rect();
+
+
             }
 
             if (GUI.Button(new Rect(waterTowerRect), "500 G", waterTower))
             {
                 Debug.Log("Water Tower Selected");
                 creator.towerID = 2;
-                tileSelected = waterTowerRect;
+                towerIsSelected = true;
+                if (towerIsSelected)
+                    tileSelected = waterTowerRect;
+                else
+                    tileSelected = new Rect();
             }
             j++;
             if (GUI.Button(new Rect(earthTowerRect), "500 G", earthTower))
             {
                 Debug.Log("Earth Tower Selected");
                 creator.towerID = 3;
-                tileSelected = earthTowerRect;
+                towerIsSelected = true;
+                if (towerIsSelected)
+                    tileSelected = earthTowerRect;
+
             }
 
             #region Open/Close Button
@@ -227,7 +249,11 @@ namespace TowerDefense
                     showInv = !showInv;
                     showButton = true;
                 }
-                GUI.Box(tileSelected, "", tileSelect);
+
+                if (towerIsSelected)
+                {
+                    GUI.Box(tileSelected, "", tileSelect);
+                }
             }
             else
             {
