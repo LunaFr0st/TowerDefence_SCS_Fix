@@ -8,6 +8,7 @@ namespace TowerDefense
     {
         public float health = 100f; // Enemie's health which starts at 100
         public int goldToGive = 100;
+        public GameObject graveStone;
 
         PlayersMoney money;
         WaveModule wave;
@@ -24,9 +25,14 @@ namespace TowerDefense
             if (health <= 0)
             {
                 // Destroy the enemy
+                if(graveStone != null)
+                {
+                    Instantiate(graveStone, gameObject.transform.position, Quaternion.identity);
+                }
                 Destroy(gameObject);
                 money.RecieveGold(goldToGive);
                 wave.enemiesKilled++;
+                
             }
         }
     }

@@ -23,29 +23,33 @@ namespace TowerDefense
         void Update()
         {
             canPlace = !gui.waveStarted;
-            if (towerID == 0)
+            if(gui.towerIsSelected)
             {
-                towerCost = 225;
-            }
-            else
-            {
-                towerCost = 500;
-            }
-            if (money.gold >= towerCost)
-            {
-                if (Input.GetMouseButtonDown(1))
+                if (towerID == 0)
                 {
-                    RaycastHit hit;
-                    Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-                    if (Physics.Raycast(ray, out hit))
+                    towerCost = 225;
+                }
+                else
+                {
+                    towerCost = 500;
+                }
+                if (money.gold >= towerCost)
+                {
+                    if (Input.GetMouseButtonDown(1))
                     {
-                        if (hit.collider.tag == "Grass")
+                        RaycastHit hit;
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+                        if (Physics.Raycast(ray, out hit))
                         {
-                            GameObject clone = Instantiate(towersAval[towerID], ray.GetPoint(86), Quaternion.identity);
-                            clone.transform.position = new Vector3(clone.transform.position.x, 3, clone.transform.position.z);
-                            Debug.Log(clone.transform.position.x + ", " + clone.transform.position.y + ", " + clone.transform.position.z);
-                            money.SpendGold(towerCost);
+                            if (hit.collider.tag == "Grass")
+                            {
+                                GameObject clone = Instantiate(towersAval[towerID], ray.GetPoint(86), Quaternion.identity);
+                                clone.transform.position = new Vector3(clone.transform.position.x, 3, clone.transform.position.z);
+                                Debug.Log(clone.transform.position.x + ", " + clone.transform.position.y + ", " + clone.transform.position.z);
+                                money.SpendGold(towerCost);
+                                gui.towerIsSelected = false;
+                            }
                         }
                     }
                 }
