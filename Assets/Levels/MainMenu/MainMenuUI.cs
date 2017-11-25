@@ -9,6 +9,7 @@ public class MainMenuUI : MonoBehaviour
     #region Variables
     [Header("Bools")]
     public bool showOptions;
+    public bool showPlay;
     public bool muteToggle;
     public bool fullScreenToggle;
 
@@ -19,6 +20,9 @@ public class MainMenuUI : MonoBehaviour
     public GameObject menu;
     public GameObject options;
     public GUIStyle Logo = new GUIStyle();
+    public GUIStyle BG = new GUIStyle();
+    public GUIStyle Text = new GUIStyle();
+    public GUIStyle smallText = new GUIStyle();
 
     [Header("Resolution Set & Screen Elements")]
     //public int index;
@@ -43,36 +47,42 @@ public class MainMenuUI : MonoBehaviour
     {
         Event e = Event.current;
 
-        if (!showOptions) // If we are on our Main menu
+        if (!showPlay) // If we are on our Main menu
         {
-            GUI.Box(new Rect(0, 0, Screen.width, Screen.height), ""); // background box
+            GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "", BG); // background box
             GUI.Box(new Rect(4 * sW, 0.6f * sH, 8 * sW, 2 * sH), "", Logo); // title
 
             // Buttons
-            if (GUI.Button(new Rect(6 * sW, 4 * sH, 4 * sW, sH), "Play"))
+            if (GUI.Button(new Rect(6 * sW, 4 * sH, 4 * sW, sH), "Play", Text))
             {
-                SceneManager.LoadScene(1);
+                showPlay = true;
             }
 
-            if (GUI.Button(new Rect(6 * sW, 5 * sH, 4 * sW, sH), "Options"))
-            {
-                showOptions = true;
-            }
-
-            if (GUI.Button(new Rect(6 * sW, 6 * sH, 4 * sW, sH), "Exit"))
+            if (GUI.Button(new Rect(6 * sW, 6 * sH, 4 * sW, sH), "Exit", Text))
             {
                 Application.Quit();
             }
         }
 
-        else if (showOptions) // If we are on our Options menu
+        else if (showPlay) // If we are on our Options menu
         {
-            GUI.Box(new Rect(0, 0, Screen.width, Screen.height), ""); // background box
-            GUI.Box(new Rect(4 * sW, 0.25f * sH, 8 * sW, 2 * sH), "Options"); // title
+            GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "", BG); // background box
+            GUI.Box(new Rect(4 * sW, 0.25f * sH, 8 * sW, 2 * sH), "Level Select", Text); // title
 
-            if (GUI.Button(new Rect(14.875f * sW, 8.375f * sH, sW, 0.5f * sH), "Back"))
+            // Buttons
+            if (GUI.Button(new Rect(6 * sW, 4 * sH, 4 * sW, sH), "Level 1", Text))
             {
-                showOptions = false;
+                SceneManager.LoadScene(1);
+            }
+
+            if (GUI.Button(new Rect(6 * sW, 6 * sH, 4 * sW, sH), "Level 2", Text))
+            {
+                SceneManager.LoadScene(2);
+            }
+
+            if (GUI.Button(new Rect(14.875f * sW, 8.375f * sH, sW, 0.5f * sH), "Back", smallText))
+            {
+                showPlay = false;
             }
 
             // Set our aspect shiz if screen size changes
