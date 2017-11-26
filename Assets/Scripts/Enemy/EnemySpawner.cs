@@ -16,11 +16,10 @@ namespace TowerDefense
         public float spawnDelay = 0.5f;
 
 
-        void Awake()
+        void Start()
         {
             wavemod = GameObject.Find("WaveModule").GetComponent<WaveModule>();
             levelGUI = GameObject.Find("GUI").GetComponent<LevelGUIManager>();
-            enemyLeftToSpawn = totalEnemies;
         }
         void Update()
         {
@@ -37,10 +36,12 @@ namespace TowerDefense
                     }
                 }
             }
-            else
+            if(wavemod.enemiesKilled == totalEnemies)
             {
-                wavemod.WaveManager(5);
+                levelGUI.waveStarted = false;
+                wavemod.WaveManager(2);
             }
+            
         }
     }
 }
