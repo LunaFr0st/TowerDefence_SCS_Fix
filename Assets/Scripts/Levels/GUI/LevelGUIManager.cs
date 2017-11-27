@@ -66,6 +66,8 @@ namespace TowerDefense
         public string money;  //
         public bool waveStarted = false;
         public float timeSpeed = 2f;
+        public bool isPaused;
+        public float savedTimeScale;
 
         int sW; // Screen Width
         int sH; // Screen Height
@@ -105,9 +107,27 @@ namespace TowerDefense
             sH = Screen.height / 9;
             Debug.Log(waveStarted);
             healthCounter = (castleHealth.health / 37.5f);
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (isPaused && !castleHealth.castleDestroyed)
+                {
+                    Time.timeScale = 1;
+                    isPaused = false;
+                }
+                else if (!isPaused && !castleHealth.castleDestroyed)
+                {
+                    Time.timeScale = 0;
+                    isPaused = true;
+                }
+            }
         }
         void OnGUI()
         {
+
+            // Pause Menu
+
+
+
             // Constant Buttons
             if (!waveStarted)
             {
@@ -188,8 +208,8 @@ namespace TowerDefense
                 if (towerIsSelected)
                     tileSelected = arrowTowerRect;
                 else
-                    tileSelected = new Rect(); 
-                
+                    tileSelected = new Rect();
+
             }
             j++;
             if (GUI.Button(new Rect(fireTowerRect), "500 G", fireTower))
@@ -314,10 +334,23 @@ namespace TowerDefense
                 }
                 if (GUI.Button(new Rect(8.5f * sW, sH * i, 2f * sW, sH), "No"))
                 {
-                    SceneManager.LoadSceneAsync("Level_02");
+                    SceneManager.LoadSceneAsync("MainMenu");
                 }
             }
             #endregion
+            if (isPaused)
+            {
+                GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "");
+                GUI.Box(new Rect(6.5f * sW, 3 * sH, 3 * sW, 1 * sH), "Game Paused!");
+                if (GUI.Button(new Rect(6.5f * sW, 4 * sH, 3 * sW, 1 * sH), "Resume Game"))
+                {
+                    isPaused = false;
+                }
+                if (GUI.Button(new Rect(6.5f * sW, 5 * sH, 3 * sW, 1 * sH), "Exit To Menu"))
+                {
+                    SceneManager.LoadSceneAsync("MainMenu");
+                }
+            }
         }
 
     }

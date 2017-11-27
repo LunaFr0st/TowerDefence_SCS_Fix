@@ -75,10 +75,11 @@ public class MainMenuUI : MonoBehaviour
                 SceneManager.LoadScene(1);
             }
 
-            if (GUI.Button(new Rect(6 * sW, 6 * sH, 4 * sW, sH), "Level 2", Text))
-            {
-                SceneManager.LoadScene(2);
-            }
+            
+            //if (GUI.Button(new Rect(6 * sW, 6 * sH, 4 * sW, sH), "Level 2", Text))
+            //{
+            //    SceneManager.LoadScene(2);
+            //}
 
             if (GUI.Button(new Rect(14.875f * sW, 8.375f * sH, sW, 0.5f * sH), "Back", smallText))
             {
