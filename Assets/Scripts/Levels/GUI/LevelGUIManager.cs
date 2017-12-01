@@ -344,6 +344,7 @@ namespace TowerDefense
                 GUI.Box(new Rect(6.5f * sW, 3 * sH, 3 * sW, 1 * sH), "Game Paused!");
                 if (GUI.Button(new Rect(6.5f * sW, 4 * sH, 3 * sW, 1 * sH), "Resume Game"))
                 {
+                    Time.timeScale = 1;
                     isPaused = false;
                 }
                 if (GUI.Button(new Rect(6.5f * sW, 5 * sH, 3 * sW, 1 * sH), "Exit To Menu"))
